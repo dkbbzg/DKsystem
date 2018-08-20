@@ -4,8 +4,10 @@ import router from './router'
 import store from './vuex/store.js'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import NavMenu from './components/Global/nav-menu.vue'
 
 Vue.use(ElementUI)
+Vue.component('nav-menu', NavMenu)
 
 Vue.config.productionTip = false
 
