@@ -1,20 +1,13 @@
 <template>
   <div class="nav-menu">
-    <div class="list first" v-for="first in this.data" :key="first.name">
-      <div class="row-name" :class="first.isRoot ? 'root' : ''">
-        <span>{{ first.name }}</span>
-        <i class="el-icon-arrow-down" v-if="!first.isRoot"></i>
+    <div class="list parent" v-for="(parent, index) in this.data" :key="parent.id">
+      <div class="row-name" @click="listChange(index)">
+        <span>{{ parent.name }}</span>
+        <i class="el-icon-arrow-down"></i>
       </div>
-      <div class="list second" v-for="second in first.tree" :key="second.name" v-if="!first.isRoot">
-        <div class="row-name" :class="second.isRoot ? 'root' : ''">
-          <span>{{ second.name }}</span>
-          <i class="el-icon-arrow-down" v-if="!second.isRoot"></i>
-        </div>
-        <div class="list third" v-for="third in second.tree" :key="third.name" v-if="!second.isRoot">
-          <div class="row-name root" :class="third.isRoot ? 'root' : ''">
-            <span>{{ third.name }}</span>
-            <i class="el-icon-arrow-down" v-if="!third.isRoot"></i>
-          </div>
+      <div class="child" :class="active == child.id ? 'active' : ''" v-for="child in parent.tree" :key="child.id" @click="active = child.id">
+        <div class="row-name">
+          <span>{{ child.name }}</span>
         </div>
       </div>
     </div>
@@ -23,12 +16,21 @@
 
 <script>
 import store from '../../vuex/store.js'
+import $ from 'jquery'
+
 export default {
   name: 'NavMenu',
   store,
   props: ['data'],
-  created () {
-    console.log(this.data)
+  data () {
+    return {
+      active: ''
+    }
+  },
+  methods: {
+    listChange (index) {
+      $('.list').eq(index).toggleClass('open')
+    }
   }
 }
 </script>
@@ -38,7 +40,6 @@ export default {
   width: 100%;
   height: 100%;
   overflow-y: scroll;
-  padding-right: 8%;
   font-size: 16px;
 }
 .row-name {
@@ -47,8 +48,33 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
 }
-.list {
-  padding-left: 20px;
+.row-name:hover {
+  background-color: #777;
+  color: #222;
+}
+.parent>.row-name {
+  padding: 0 20px;
+}
+.child>.row-name {
+  padding: 0 40px;
+}
+.list>.child {
+  height: 0;
+  overflow: hidden;
+  transition: all .3s ease;
+}
+.list.open>.child {
+  height: 60px;
+}
+.list>.row-name>i {
+  transition: all .3s ease;
+}
+.list.open>.row-name>i {
+  transform: rotate(-180deg);
+}
+.child.active {
+  color: #f9b060;
 }
 </style>

@@ -17,6 +17,7 @@
 
 <script>
 import store from '../vuex/store.js'
+import axios from 'axios'
 export default {
   name: 'Login',
   store,
@@ -30,8 +31,15 @@ export default {
   methods: {
     // login's button
     btnLogin () {
-      console.log('user: ' + this.user + ', pwd: ' + this.pwd)
       this.loading = true
+      axios.get('127.0.0.1:8088', {
+        user: this.user,
+        pwd: this.pwd
+      }).then(response => {
+        console.log(response)
+      }).catch(error => {
+        console.log(error)
+      })
       if (this.user === 'admin' && this.pwd === '000000') {
         this.loading = false
         this.$router.push({ name: 'Menu' })
